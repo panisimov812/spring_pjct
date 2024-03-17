@@ -13,40 +13,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface UserCounterRepository extends CrudRepository<UserCounter, Long> {
 
-
+    UserCounter findByAccount(String account);
     UserCounter findByAccountAndName(String account, String name);
     UserCounter findByName(String name);
 
+    /**
+     * Запрос пополнения баланса банкнот
 
-
-//    /**
-//     * Используется для подстановки параметра YV2021.Banknotes.Counter
-//     * в случае его отсутствия
-//     * @param account - аккаунт пользователя
-//     * @param name
-//     */
-//    @Modifying
-//    @Transactional
-//    @Query(value = "INSERT INTO user_counter VALUES (account, name)", nativeQuery = true)
-//    //INSERT INTO Products VALUES (1, 'Galaxy S9', 'Samsung', 4, 63000)
-//    void insertBanknoteAttributeByAccount(@Param("account") String account, @Param("name") String name);
-
-//    @Modifying
-//    @Query(value = "INSERT INTO journals (messageid, oldowner) select m.id, m.owner from message m where m.id = ?1",
-//            nativeQuery = true)
-//    void updateJournalOldowner(Long id);
-
-    /*
-    Метод обновления банкнот, по аккаунту
      */
     @Modifying
     @Transactional
     @Query("UPDATE UserCounter uc SET uc.value = :value WHERE uc.account = :account " +
-            "and uc.name = 'YV2021.Banknotes.Counter'")
-    void updateBanknoteValueByAccount(@Param("account") String account, @Param("value") int value);
+            "and uc.name = :attributeName")
+    void updateBanknoteValueByAccount(@Param("value") int value,
+                                      @Param("account") String account,
+                                      @Param("attributeName") String attributeName);
 
-    /*
-    Метод обновления уровня, по аккаунту
+    /**
+     * Запрос на обновление уровня игрока
+     * @param account - аккаунт пользовтаеля передаваемый с фронта
+     * @param value - уровень игрокапередаваемый с фронта
      */
     @Modifying
     @Transactional
@@ -54,8 +40,10 @@ public interface UserCounterRepository extends CrudRepository<UserCounter, Long>
             "and uc.name = 'YV2021.Level.Counter'")
     void updateLevelValueByAccount(@Param("account") String account, @Param("value") int value);
 
-    /*
-    Метод обновления монет, по аккаунту
+    /**
+     * Запрос для обновления количества монет
+     * @param account - аккаунт пользовтаеля передаваемый с фронта
+     * @param value - количеств монет передаваемое с фронта
      */
     @Modifying
     @Transactional
