@@ -37,7 +37,7 @@ public class UserCounterController {
             addCounter(account, BANKNOTES_ATTRIBUTE, 0);
         }
         if (banknoteUpdateDTO.getValue() > MAX_VALUE_BANKNOTES || banknoteUpdateDTO.getValue() < INCORRECT_BANKNOTES)
-            throw new PanemException("Incorrect banknotes value for account: " + account);
+            throw new PanemException("Incorrect banknotes value: " + banknoteUpdateDTO.getValue() + " for account: " + account);
         userCounterRepository.updateBanknoteValueByAccount(account, banknoteUpdateDTO.getValue());
         return new Response("OK");
     }
