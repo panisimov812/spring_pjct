@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface UserCounterRepository extends CrudRepository<UserCounter, Long> {
 
-    UserCounter findByAccount(String account);
     UserCounter findByAccountAndName(String account, String name);
     UserCounter findByName(String name);
 
