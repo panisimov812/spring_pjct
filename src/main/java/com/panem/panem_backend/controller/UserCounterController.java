@@ -5,11 +5,16 @@ import com.panem.panem_backend.DTO.LevelUpdateDTO;
 import com.panem.panem_backend.DTO.Response;
 import com.panem.panem_backend.exeption.PanemException;
 import com.panem.panem_backend.models.UserCounter;
-import com.panem.panem_backend.repository.UpdateData;
 import com.panem.panem_backend.repository.UserCounterRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Контроллеры для обработки
+ *
+ * @author Anisimov Petr (tg: @petr_anisimov)
+ * @Since 18.03.2024
+ */
 
 @RestController //говорит Spring, что этот класс является контроллером, который будет обрабатывать HTTP запросы.
 @RequestMapping("/api/user-counter") // Базовый URL для всех запросов к контроллеру
@@ -30,11 +35,12 @@ public class UserCounterController {
     /**
      * Данный метод обновляет количество банкнот в счетчике YV2021.Banknotes.Counter
      * В случае если счетчик отсутствует, то метод добавляет его вызовом метода ensureBanknotesCounterExists
-     * @param account - аккаунт пользовтаеля передаваемый с фронта
+     *
+     * @param account - номер кошелька пользовтаеля передаваемый с фронта
      * @param banknoteUpdateDTO - кол-во банкнот переданное с фронта
      * @throws PanemException - исключение
      */
-    @PutMapping("/banknotes/{account}")
+    @PostMapping("/banknotes/{account}")
     public Response updateBanknoteValueByAccount(@PathVariable String account,
                                                  @RequestBody BanknoteUpdateDTO banknoteUpdateDTO) throws PanemException {
         ensureBanknotesCounterExists(account);
@@ -45,12 +51,17 @@ public class UserCounterController {
         return new Response("OK");
     }
 
-
-    @PutMapping("/level/{account}")
+    /**
+     * Метод для обновления уровня
+     *
+     * @param account - номер кошелька пользовтаеля передаваемый с фронта
+     * @param levelUpdateDTO - получение уровня
+     */
+    @PostMapping("/level/{account}")
     public Response updateLevelValueByAccount(@PathVariable String account, @RequestBody LevelUpdateDTO levelUpdateDTO)
             throws PanemException {
-        if (levelUpdateDTO.getValue() > MAX_LEVEL || levelUpdateDTO.getValue() <= INCORRECT_LEVEL)
-            throw new PanemException("Incorrect level value for account : " + account);
+        validationLevelValue(levelUpdateDTO.getValue(), account);
+
         userCounterRepository.updateLevelValueByAccount(account, levelUpdateDTO.getValue());
         return new Response("OK");
     }
@@ -60,6 +71,13 @@ public class UserCounterController {
         return new Response(e.getMessage());
     }
 
+    /**
+     * Метод для добавления отсутствующей записи в бд
+     *
+     * @param account - номер кошелька пользовтаеля передаваемый с фронта
+     * @param name    - передаваемый параметр для его записи в таблицу user_counter
+     * @param value   - передаваемое значение для его записи в таблицу user_counter
+     */
     public void addBanknotesAttribute(String account, String name, int value) {
         UserCounter userCounter = new UserCounter();
         userCounter.setAccount(account);
@@ -70,7 +88,8 @@ public class UserCounterController {
 
     /**
      * Проверка на присутсвие у пользователя аттрибута 'YV2021.Banknotes.Counter'
-     * @param account - аккаунт пользовтаеля передаваемый с фронта
+     *
+     * @param account - номер кошелька пользовтаеля передаваемый с фронта
      */
     private void ensureBanknotesCounterExists(String account) {
         if (userCounterRepository.findByAccountAndName(account, YV_2021_BANKNOTES_COUNTER) == userCounterRepository.findByName(null)) {
@@ -79,17 +98,28 @@ public class UserCounterController {
     }
 
     /**
-     *
      * @param value - кол-во банкнот переданное с фронта
      * @throws PanemException - исключение при невалидных данных
-     * кол-во банкнот не может быть ниже нуля
-     * кол-во банкнот не может привыщать значение 100000
+     *  кол-во банкнот не может быть ниже нуля
+     *  кол-во банкнот не может привыщать значение 100000
      */
     private void validateBanknoteValue(int value) throws PanemException {
         if (value > MAX_VALUE_BANKNOTES || value < INCORRECT_BANKNOTES) {
             throw new PanemException("Incorrect banknotes value: " + value);
         }
     }
+
+    /**
+     * Метод валидации уровня игрока (на данный момент в игре 15 уровень максимальный)
+     *
+     * @param levelValue - уровень устанавливаемый пользователем
+     * @param account - номер кошелька пользовтаеля передаваемый с фронта
+     */
+    private void validationLevelValue(int levelValue, String account) {
+        if (levelValue > MAX_LEVEL || levelValue <= INCORRECT_LEVEL)
+            throw new PanemException("Incorrect level value for account: " + account);
+    }
+
 }
 /**
  * В этом примере:
