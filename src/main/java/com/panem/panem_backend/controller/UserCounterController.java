@@ -1,6 +1,7 @@
 package com.panem.panem_backend.controller;
 
 import com.panem.panem_backend.DTO.BanknoteUpdateDTO;
+import com.panem.panem_backend.DTO.CoinsUpdateDTO;
 import com.panem.panem_backend.DTO.LevelUpdateDTO;
 import com.panem.panem_backend.DTO.Response;
 import com.panem.panem_backend.exeption.PanemException;
@@ -19,10 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RestController //говорит Spring, что этот класс является контроллером, который будет обрабатывать HTTP запросы.
 @RequestMapping("/api/user-counter") // Базовый URL для всех запросов к контроллеру
 public class UserCounterController {
-    final int MAX_LEVEL = 15;
-    final int MAX_VALUE_BANKNOTES = 100000;
-    final int INCORRECT_LEVEL = 0;
-    final int INCORRECT_BANKNOTES = 0;
+    static final int MAX_LEVEL = 15;
+    static final int MAX_VALUE_BANKNOTES = 100000;
+    static final int INCORRECT_LEVEL = 0;
+    static final int INCORRECT_BANKNOTES = 0;
     static final String YV_2021_BANKNOTES_COUNTER = "YV2021.Banknotes.Counter";
 
     private final UserCounterRepository userCounterRepository;
@@ -54,7 +55,7 @@ public class UserCounterController {
     /**
      * Метод для обновления уровня
      *
-     * @param account - номер кошелька пользовтаеля передаваемый с фронта
+     * @param account        - номер кошелька пользовтаеля передаваемый с фронта
      * @param levelUpdateDTO - получение уровня
      */
     @PostMapping("/level/{account}")
@@ -63,6 +64,21 @@ public class UserCounterController {
         validationLevelValue(levelUpdateDTO.getValue(), account);
 
         userCounterRepository.updateLevelValueByAccount(account, levelUpdateDTO.getValue());
+
+        return new Response("OK");
+    }
+
+    /**
+     * Метод для обнавления количества монет
+     *
+     * @param account - номер кошелька пользовтаеля передаваемый с фронта
+     * @param coinsUpdateDTO - получение монет
+     */
+    @PostMapping("/coins/{account}")
+    public Response updateCoinsValueByAccount(@PathVariable String account,
+                                              @RequestBody CoinsUpdateDTO coinsUpdateDTO) throws PanemException {
+        userCounterRepository.updateCoinValueByAccount(account, coinsUpdateDTO.getValue());
+
         return new Response("OK");
     }
 
@@ -100,8 +116,8 @@ public class UserCounterController {
     /**
      * @param value - кол-во банкнот переданное с фронта
      * @throws PanemException - исключение при невалидных данных
-     *  кол-во банкнот не может быть ниже нуля
-     *  кол-во банкнот не может привыщать значение 100000
+     *                        кол-во банкнот не может быть ниже нуля
+     *                        кол-во банкнот не может привыщать значение 100000
      */
     private void validateBanknoteValue(int value) throws PanemException {
         if (value > MAX_VALUE_BANKNOTES || value < INCORRECT_BANKNOTES) {
@@ -113,7 +129,7 @@ public class UserCounterController {
      * Метод валидации уровня игрока (на данный момент в игре 15 уровень максимальный)
      *
      * @param levelValue - уровень устанавливаемый пользователем
-     * @param account - номер кошелька пользовтаеля передаваемый с фронта
+     * @param account    - номер кошелька пользовтаеля передаваемый с фронта
      */
     private void validationLevelValue(int levelValue, String account) {
         if (levelValue > MAX_LEVEL || levelValue <= INCORRECT_LEVEL)
@@ -121,14 +137,3 @@ public class UserCounterController {
     }
 
 }
-/**
- * В этом примере:
- *
- * @RestController говорит Spring, что этот класс является контроллером, который будет обрабатывать HTTP запросы.
- * @RequestMapping("/api/user-counter") определяет базовый URL для всех эндпоинтов этого контроллера.
- * @PutMapping("/banknotes/{account}") указывает, что метод updateBanknoteValueByAccount будет обрабатывать PUT запросы по пути /api/user-counter/banknotes/{account}, где {account} - это переменная часть URL, содержащая аккаунт.
- * @PathVariable String account говорит Spring, что значение {account} из URL должно быть привязано к аргументу account метода.
- * @RequestBody int value указывает Spring на то, что значение из тела запроса должно быть привязано к аргументу value метода.
- * userCounterRepository.updateBanknoteValueByAccount(account, value) вызывает метод из вашего репозитория для обновления значения банкнот по аккаунту.
- * Теперь, когда вы отправите PUT запрос на /api/user-counter/banknotes/{account}, передавая в теле запроса новое значение банкнот, оно будет обновлено в базе данных.
- */

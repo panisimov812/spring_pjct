@@ -9,7 +9,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 
-
+/**
+ * Репозитоирй с методами выпполнения sql запросов к бд
+ *
+ * @author Anisimov Petr (tg: @petr_anisimov)
+ * @Since 18.03.2024
+ */
 @Repository
 public interface UserCounterRepository extends CrudRepository<UserCounter, Long> {
 
@@ -17,8 +22,11 @@ public interface UserCounterRepository extends CrudRepository<UserCounter, Long>
     UserCounter findByName(String name);
 
     /**
-     * Запрос пополнения баланса банкнот
-
+     *  Запрос пополнения баланса банкнот
+     *
+     * @param value - кол-ва банкнот передаваемое в запрос в качестве аргумента
+     * @param account - номер кошелька пользовтаеля передаваемый с фронта
+     * @param attributeName - аттрибут банкнот передаваемый в качетсве аргумента
      */
     @Modifying
     @Transactional
@@ -30,8 +38,9 @@ public interface UserCounterRepository extends CrudRepository<UserCounter, Long>
 
     /**
      * Запрос на обновление уровня игрока
-     * @param account - аккаунт пользовтаеля передаваемый с фронта
-     * @param value - уровень игрокапередаваемый с фронта
+     *
+     * @param account - номер кошелька пользовтаеля передаваемый с фронта
+     * @param value - уровень игрока передаваемый в запрос в качестве аргумента
      */
     @Modifying
     @Transactional
@@ -41,14 +50,14 @@ public interface UserCounterRepository extends CrudRepository<UserCounter, Long>
 
     /**
      * Запрос для обновления количества монет
-     * @param account - аккаунт пользовтаеля передаваемый с фронта
-     * @param value - количеств монет передаваемое с фронта
+     *
+     * @param account - номер кошелька пользовтаеля передаваемый с фронта
+     * @param value - количеств монет передаваемое в качестве аргумента
      */
     @Modifying
     @Transactional
     @Query("UPDATE UserCounter uc SET uc.value = :value WHERE uc.account = :account " +
             "and uc.name = 'YV2021.Coins.Counter'")
     void updateCoinValueByAccount(@Param("account") String account, @Param("value") int value);
-
 
 }

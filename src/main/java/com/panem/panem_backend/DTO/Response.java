@@ -1,13 +1,9 @@
 package com.panem.panem_backend.DTO;
 
+import lombok.Data;
 
+@Data
 public class Response {
-    public String getMessage() {
-        return message;
-    }
-
-    public Response() {
-    }
 
     public Response(String message) {
         this.message = message;
@@ -15,8 +11,5 @@ public class Response {
 
     private String message;
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }
 
