@@ -7,6 +7,7 @@ import com.panem.panem_backend.DTO.Response;
 import com.panem.panem_backend.exeption.PanemException;
 import com.panem.panem_backend.models.UserCounter;
 import com.panem.panem_backend.repository.UserCounterRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,8 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserCounterController {
     static final int MAX_LEVEL = 15;
     static final int MAX_VALUE_BANKNOTES = 100000;
+    static final int MAX_VALUE_COINS = 100000;
     static final int INCORRECT_LEVEL = 0;
     static final int INCORRECT_BANKNOTES = 0;
+    static final int INCORRECT_COINS = -1;
     static final String YV_2021_BANKNOTES_COUNTER = "YV2021.Banknotes.Counter";
 
     private final UserCounterRepository userCounterRepository;
@@ -77,6 +80,7 @@ public class UserCounterController {
     @PostMapping("/coins/{account}")
     public Response updateCoinsValueByAccount(@PathVariable String account,
                                               @RequestBody CoinsUpdateDTO coinsUpdateDTO) throws PanemException {
+        validationCoinValue(coinsUpdateDTO.getValue(), account);
         userCounterRepository.updateCoinValueByAccount(account, coinsUpdateDTO.getValue());
 
         return new Response("OK");
@@ -135,5 +139,18 @@ public class UserCounterController {
         if (levelValue > MAX_LEVEL || levelValue <= INCORRECT_LEVEL)
             throw new PanemException("Incorrect level value for account: " + account);
     }
+
+    /**
+     * Метод валидации манет
+     *
+     * @param value - кол-во монет переданное с фронта
+     * @param account - номер кошелька пользовтаеля передаваемый с фронта
+     */
+    private void validationCoinValue(int value, String account) throws PanemException {
+        if (value <=INCORRECT_COINS || value > MAX_VALUE_COINS )
+            throw new PanemException("Incorrect coins value for account: " + account);
+    }
+
+    //TODO в дальнейшем следует реализовать единый метод валидации для сравенения условий
 
 }
