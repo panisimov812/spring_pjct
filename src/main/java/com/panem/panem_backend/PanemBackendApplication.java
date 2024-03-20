@@ -19,47 +19,6 @@ public class PanemBackendApplication {
         SpringApplication.run(PanemBackendApplication.class, args);
     }
 
-//    @Bean
-//    public CommandLineRunner demo12(UserCounterRepository repository) {
-//        return (args) -> {
-//            // save a few customers
-//            repository.save(new UserCounter("4100315004057239", "Bauer",12));
-
-//
-//
-//            // fetch an individual customer by ID
-//            repository.updateBanknoteValueByAccount("4100315004013576", 121);
-//            log.info("обновили банкноты");
-//            log.info("--------------------------------");
-//            log.info("");
-//
-//            repository.updateLevelValueByAccount ("4100315004013576", 5);
-//            log.info("обновили уровень");
-//            log.info("--------------------------------");
-//            log.info("");
-//
-//            repository.updateCoinValueByAccount ("4100315004013576", 5);
-//            log.info("обновили монет");
-//            log.info("--------------------------------");
-//            log.info("");
-//
-//            UserCounter counter = repository.findById(136023L);
-//            log.info("Customer found with findById(1L):");
-//            log.info("--------------------------------");
-//            log.info(counter.toString());
-//            log.info("");
-//
-//            UserCounter energy = repository.findByAccountAndName("4100315004013576","YV2021.Energy.Counter");
-//            log.info("Customer found with :");
-//            log.info("--------------------------------");
-//            log.info(energy.toString());
-//            log.info("");
-
-
-
-//        };
-//    }
-
     //бин чтобы включить логирование
     @Bean
     public Logger logger() {
