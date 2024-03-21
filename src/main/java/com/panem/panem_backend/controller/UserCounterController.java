@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Контроллеры для обработки
+ * В контроллере используетс аннотация CrossOrigin("*")
+ * ("*") В этом случае запросы будут разрешены со всех источников.
  *
  * @author Anisimov Petr (tg: @petr_anisimov)
  * @Since 18.03.2024
@@ -44,6 +46,7 @@ public class UserCounterController {
      * @param banknoteUpdateDTO - кол-во банкнот переданное с фронта
      * @throws PanemException - исключение
      */
+    @CrossOrigin("*")
     @PostMapping("/banknotes/{account}")
     public Response updateBanknoteValueByAccount(@PathVariable String account,
                                                  @RequestBody BanknoteUpdateDTO banknoteUpdateDTO) throws PanemException {
@@ -61,6 +64,7 @@ public class UserCounterController {
      * @param account        - номер кошелька пользовтаеля передаваемый с фронта
      * @param levelUpdateDTO - получение уровня
      */
+    @CrossOrigin("*")
     @PostMapping("/level/{account}")
     public Response updateLevelValueByAccount(@PathVariable String account, @RequestBody LevelUpdateDTO levelUpdateDTO)
             throws PanemException {
@@ -77,6 +81,7 @@ public class UserCounterController {
      * @param account - номер кошелька пользовтаеля передаваемый с фронта
      * @param coinsUpdateDTO - получение монет
      */
+    @CrossOrigin("*")
     @PostMapping("/coins/{account}")
     public Response updateCoinsValueByAccount(@PathVariable String account,
                                               @RequestBody CoinsUpdateDTO coinsUpdateDTO) throws PanemException {
