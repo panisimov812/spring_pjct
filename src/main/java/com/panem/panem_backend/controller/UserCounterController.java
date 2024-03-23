@@ -7,7 +7,6 @@ import com.panem.panem_backend.DTO.Response;
 import com.panem.panem_backend.exeption.PanemException;
 import com.panem.panem_backend.models.UserCounter;
 import com.panem.panem_backend.repository.UserCounterRepository;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RestController //говорит Spring, что этот класс является контроллером, который будет обрабатывать HTTP запросы.
 @RequestMapping("/api/user-counter") // Базовый URL для всех запросов к контроллеру
 public class UserCounterController {
-    static final int MAX_LEVEL = 15;
+    static final int MAX_LEVEL = 20;
     static final int MAX_VALUE_BANKNOTES = 100000;
     static final int MAX_VALUE_COINS = 100000;
     static final int INCORRECT_LEVEL = 0;
