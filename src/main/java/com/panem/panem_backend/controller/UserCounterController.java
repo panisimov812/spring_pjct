@@ -1,8 +1,8 @@
 package com.panem.panem_backend.controller;
 
-import com.panem.panem_backend.DTO.BanknoteUpdateDTO;
-import com.panem.panem_backend.DTO.CoinsUpdateDTO;
-import com.panem.panem_backend.DTO.LevelUpdateDTO;
+import com.panem.panem_backend.DTO.userCounterDTO.BanknoteUpdateDTO;
+import com.panem.panem_backend.DTO.userCounterDTO.CoinsUpdateDTO;
+import com.panem.panem_backend.DTO.userCounterDTO.LevelUpdateDTO;
 import com.panem.panem_backend.DTO.Response;
 import com.panem.panem_backend.exeption.PanemException;
 import com.panem.panem_backend.models.UserCounter;
@@ -43,7 +43,6 @@ public class UserCounterController {
      *
      * @param account - номер кошелька пользовтаеля передаваемый с фронта
      * @param banknoteUpdateDTO - кол-во банкнот переданное с фронта
-     * @throws PanemException - исключение
      */
     @CrossOrigin("*")
     @PostMapping("/banknotes/{account}")
